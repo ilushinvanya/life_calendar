@@ -88,9 +88,7 @@
             }
         },
         mounted() {
-            if ( this.input_date ) {
                 this.calcWeeksGrid()
-            }
         },
         computed: {
             years_array() {
@@ -151,18 +149,19 @@
                 // active_now_Date // Now
                 // calendar_end_Date // birthday + 122 years. Max life human duration
 
-                console.time("calendar")
+                console.time("calcWeeksGrid")
 
-                var active_start_Date = parseISO(this.input_date); // дата рождения 14-04-1988
+                var active_now_Date = new Date();
+                var active_start_Date = this.input_date ? parseISO(this.input_date) : active_now_Date; // дата рождения 14-04-1988
+
+                if ( isBefore(active_now_Date, active_start_Date ) ){
+                    console.log("isBefore")
+                    return false;
+                }
+
 
                 var calendar_start_Date = subYears(active_start_Date, this.before_years) // на 5 ago birthday 14-04-1983
                 var calendar_end_Date = addYears(active_start_Date, this.end_of_years) // до 122 лет 14-04-2110
-
-                var active_now_Date = new Date();
-
-                if ( isBefore(active_now_Date, active_start_Date ) ){
-                    return false;
-                }
 
                 var calendar_weeks_array = eachWeekOfInterval({
                     start: calendar_start_Date,
@@ -207,7 +206,7 @@
                     active_start_Date
                 );
 
-                console.timeEnd("calendar")
+                console.timeEnd("calcWeeksGrid")
             }
         },
         watch: {
