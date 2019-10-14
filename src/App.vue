@@ -59,7 +59,9 @@
         subYears,
         isWithinInterval,
         isBefore,
-        parseISO
+        parseISO,
+        startOfYear,
+        differenceInCalendarWeeks
     } from 'date-fns'
 
     export default {
@@ -143,30 +145,35 @@
             calcWeeksGrid() {
                 // Main function for generate calendar weeks grid
 
-                // Arhitecture: ( _Date named but is Date object )
+                // Arhitecture: ( _Date named is Date object )
                 // calendar_start_Date -> 5 year ago from birthday
                 // active_start_Date -> from input element, maybe birthday
                 // active_now_Date // Now
-                // calendar_end_Date // birthday + 122 years. Max life human duration
+                // calendar_end_Date // birthday + 122 years. Max duration human life
 
                 console.time("calcWeeksGrid")
 
                 var active_now_Date = new Date();
                 var active_start_Date = this.input_date ? parseISO(this.input_date) : active_now_Date; // дата рождения 14-04-1988
 
+
+                // Проверка что введенное значение не больше сегодняшней даты
                 if ( isBefore(active_now_Date, active_start_Date ) ){
                     console.log("isBefore")
                     return false;
                 }
 
 
-                var calendar_start_Date = subYears(active_start_Date, this.before_years) // на 5 ago birthday 14-04-1983
+                var calendar_start_Date = subYears(active_start_Date, this.before_years) // на 5 ago from birthday 14-04-1983
                 var calendar_end_Date = addYears(active_start_Date, this.end_of_years) // до 122 лет 14-04-2110
 
+                    // Всего недель в сетке
                 var calendar_weeks_array = eachWeekOfInterval({
-                    start: calendar_start_Date,
-                    end: calendar_end_Date
+                    start:calendar_start_Date,
+                    end:calendar_end_Date
                 }, {weekStartsOn: 1});
+
+                console.log(calendar_weeks_array)
 
 
                 var calendar_weeks_obj = [];
@@ -185,7 +192,13 @@
                     calendar_weeks_obj.push(obj)
                 })
 
+                // Main return
                 this.result_weeks = calendar_weeks_obj;
+
+
+
+
+                // This optionally display count of days or month and weeks, years etc
                 this.active_days_length = differenceInDays(
                     active_now_Date,
                     active_start_Date
