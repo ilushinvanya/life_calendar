@@ -31,7 +31,9 @@
                 <div v-for="week in result_weeks"
                      @click="selectWeek( week )"
                      :class="{ select : select_week == week, active : week.active }"
-                     class="cell"></div>
+                     class="cell">
+                    <div class="tooltip">{{ week.date }}</div>
+                </div>
 
             </div>
 
@@ -255,7 +257,7 @@
             grid-template-columns: 1fr 2fr 1fr;
             align-items: center;
             justify-items: start;
-
+            z-index: 9;
             .input {
                 input {
                     padding: 10px;
@@ -285,6 +287,8 @@
                 font-size: 12px;
                 height: 15px;
                 border-radius: 2px;
+                position: relative;
+
             }
 
             .years_old, .years {
@@ -297,6 +301,32 @@
 
                 .cell {
                     border: 1px #868686 solid;
+                    .tooltip {
+                        width: 120px;
+                        position: absolute;
+                        background: white;
+                        display: none;
+                        z-index: 9;
+                        bottom: calc( 100% + 4px );
+                        left: 50%;
+                        transform: translateX(-50%);
+                        padding: 10px;
+                        border: 1px black solid;
+                        border-radius: 3px;
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            border: 6px solid transparent;
+                            border-top: 6px solid black;
+                            bottom: -12px;
+                            left: 63px;
+                        }
+                    }
+                    &:hover {
+                        .tooltip {
+                            display: block;
+                        }
+                    }
 
                     &.active {
                         cursor: pointer;
